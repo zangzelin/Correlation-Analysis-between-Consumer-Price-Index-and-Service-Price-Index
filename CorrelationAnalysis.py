@@ -151,21 +151,39 @@ def main():
     print(ConsumerPriceIndex)
 
     cov_between_total_and_ser = []
-    for i in range(len(TotalIndex)-12):
-        cov_between_total_and_ser.append(covariance(
+    for i in range(len(TotalIndex)-12+1):
+        cov_between_total_and_ser.append(correlation(
             TotalIndex[i:i+12], ServicePriceIndex[i:i+12]))
 
     cov_between_total_and_con = []
-    for i in range(len(TotalIndex)-12):
-        cov_between_total_and_con.append(covariance(
+    for i in range(len(TotalIndex)-12+1):
+        cov_between_total_and_con.append(correlation(
             TotalIndex[i:i+12], ConsumerPriceIndex[i:i+12]))
 
     print(cov_between_total_and_ser)
     print(cov_between_total_and_con)
 
-    plt.plot(cov_between_total_and_con, 'r')
-    plt.plot(cov_between_total_and_ser, 'k')
-    plt.show()
+    c1 = []
+    c2 = []
+
+    for i in range(len(TotalIndex)-12):
+        c1.append(cov_between_total_and_ser[i]/(cov_between_total_and_ser[i]+cov_between_total_and_con[i]))
+        c2.append(cov_between_total_and_con[i]/(cov_between_total_and_ser[i]+cov_between_total_and_con[i]))
+
+    # fig, ax = plt.subplots()
+    # ax.plot(cov_between_total_and_con, 'r')
+    # ax.plot(cov_between_total_and_ser, 'k')
+    # ax.xlable('Time / Month')
+    # ax.ylable('Correlation')
+    
+    # plt.figure(2)
+    # plt.plot(c2,'r')
+    # plt.plot(c1,'k')
+    f = open('dataout.csv','w')
+    for i in range(len(TotalIndex)//12):
+        f.write(str(cov_between_total_and_ser[i*12])+','+str(cov_between_total_and_con[i*12])+'\n')
+
+    # plt.show()
 
 
 
